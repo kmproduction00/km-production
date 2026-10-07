@@ -90,31 +90,68 @@ export default function AppsPage() {
           </p>
         </div>
 
-        {/* Quick App Selector Pills (Mobile Friendly & Responsive) */}
-        <div className="flex justify-center mb-6 sm:mb-10">
-          <div className="flex flex-wrap sm:flex-nowrap items-center justify-center gap-1.5 sm:gap-2 bg-zinc-900/90 p-1.5 rounded-2xl border border-white/10 shadow-xl max-w-full">
+        {/* Prominent, Eye-Catching App Switcher Grid (Ultra-Optimized for Mobile & Desktop) */}
+        <div className="max-w-4xl mx-auto mb-8 sm:mb-12">
+          
+          <div className="flex items-center justify-center gap-2 mb-3 sm:mb-4 text-xs font-mono text-zinc-400 uppercase tracking-wider">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="font-semibold text-zinc-300">İncelemek İstediğiniz Uygulamayı Seçin:</span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-4">
             {appsData.map((app) => {
               const isSelected = selectedAppId === app.id;
               return (
                 <button
                   key={app.id}
                   onClick={() => setSelectedAppId(app.id)}
-                  className={`relative px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 cursor-pointer ${
+                  className={`relative p-3.5 sm:p-4 rounded-2xl border transition-all duration-300 flex items-center gap-3.5 text-left cursor-pointer group ${
                     isSelected 
-                      ? 'text-white bg-white/10 border border-white/15 shadow-sm' 
-                      : 'text-zinc-400 hover:text-zinc-200 border border-transparent'
+                      ? 'bg-zinc-900/95 border-white/40 shadow-xl shadow-black/60 ring-2 ring-white/20 scale-[1.01]' 
+                      : 'bg-zinc-950/70 border-white/10 hover:border-white/25 hover:bg-zinc-900/60 opacity-80 hover:opacity-100'
                   }`}
                 >
-                  {app.image ? (
-                    <img 
-                      src={app.image} 
-                      alt={app.title} 
-                      className="w-4 h-4 sm:w-5 sm:h-5 rounded-md object-cover border border-white/15" 
-                    />
-                  ) : (
-                    <span className={`w-2 h-2 rounded-full ${isSelected ? 'bg-emerald-400' : 'bg-zinc-600'}`} />
-                  )}
-                  <span className="truncate">{app.title}</span>
+                  {/* App Icon */}
+                  <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl overflow-hidden border p-0.5 shrink-0 shadow-md transition-transform group-hover:scale-105 ${
+                    isSelected ? 'border-white/30' : 'border-white/15 bg-zinc-900'
+                  }`}>
+                    {app.image ? (
+                      <img 
+                        src={app.image} 
+                        alt={app.title} 
+                        className="w-full h-full object-cover rounded-[10px]" 
+                      />
+                    ) : (
+                      <div className="w-full h-full rounded-[10px] bg-zinc-800 flex items-center justify-center">
+                        <Smartphone size={20} className="text-zinc-400" />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* App Info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-1">
+                      <h3 className={`text-sm sm:text-base font-bold truncate transition-colors ${
+                        isSelected ? 'text-white' : 'text-zinc-300 group-hover:text-white'
+                      }`}>
+                        {app.title}
+                      </h3>
+                    </div>
+                    <p className="text-[11px] text-zinc-400 font-mono truncate mt-0.5">
+                      {app.badge} • {app.platformText}
+                    </p>
+                  </div>
+
+                  {/* Active Radio Indicator */}
+                  <div className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition-all ${
+                    isSelected 
+                      ? 'border-emerald-400 bg-emerald-500/20 text-emerald-400' 
+                      : 'border-white/20 group-hover:border-white/40'
+                  }`}>
+                    {isSelected && (
+                      <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                    )}
+                  </div>
                 </button>
               );
             })}

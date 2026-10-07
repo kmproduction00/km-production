@@ -91,28 +91,28 @@ export const Hero: React.FC = () => {
               <span className="text-zinc-500 hidden sm:inline">• Tıklayarak uygulamayı değiştirin</span>
             </div>
 
-            {/* App Selectors */}
-            <div className="flex flex-wrap items-center justify-center gap-1.5 bg-zinc-900/90 p-1 rounded-2xl border border-white/10 w-full sm:w-auto">
+            {/* App Selectors (Prominent & Clear) */}
+            <div className="flex flex-wrap items-center justify-center gap-2 bg-zinc-900/95 p-1.5 rounded-2xl border border-white/10 w-full sm:w-auto shadow-inner">
               {appsData.map((app) => {
                 const isSelected = selectedAppId === app.id;
                 return (
                   <button
                     key={app.id}
                     onClick={() => setSelectedAppId(app.id)}
-                    className={`relative px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
+                    className={`relative px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 cursor-pointer ${
                       isSelected
-                        ? 'text-white bg-white/10 border border-white/15'
-                        : 'text-zinc-400 hover:text-zinc-200 border border-transparent'
+                        ? 'text-white bg-white/15 border border-white/20 shadow-md scale-[1.02]'
+                        : 'text-zinc-400 hover:text-white border border-transparent hover:bg-white/5'
                     }`}
                   >
                     {app.image ? (
                       <img 
                         src={app.image} 
                         alt={app.title} 
-                        className="w-3.5 h-3.5 rounded-md object-cover border border-white/10" 
+                        className="w-5 h-5 rounded-lg object-cover border border-white/15 shadow-sm" 
                       />
                     ) : (
-                      <span className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-emerald-400' : 'bg-zinc-600'}`} />
+                      <span className={`w-2 h-2 rounded-full ${isSelected ? 'bg-emerald-400' : 'bg-zinc-600'}`} />
                     )}
                     <span>{app.title}</span>
                   </button>
