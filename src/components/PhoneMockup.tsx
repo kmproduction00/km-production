@@ -21,6 +21,7 @@ import {
   ChevronLeft,
   ChevronRight,
   MousePointerClick,
+  Volume1,
   Volume2,
   VolumeX
 } from 'lucide-react';
@@ -40,7 +41,9 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
 }) => {
   const [activeScreenIndex, setActiveScreenIndex] = useState(0);
   const [slideDirection, setSlideDirection] = useState(1);
+  const [volume, setVolume] = useState(0.35);
   const [isMuted, setIsMuted] = useState(false);
+  const [showVolumePopup, setShowVolumePopup] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
@@ -52,12 +55,13 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
   useEffect(() => {
     setActiveScreenIndex(0);
     setIsPlaying(true);
+    setShowVolumePopup(false);
   }, [app.id]);
 
   // Video Autoplay & Audio Volume Setup
   useEffect(() => {
     if (currentScreen?.video && videoRef.current) {
-      videoRef.current.volume = 0.35; // Ortanın biraz altında (35% rahatsız etmeyen ideal ses)
+      videoRef.current.volume = volume;
       videoRef.current.muted = isMuted;
       videoRef.current.currentTime = 0;
       setIsPlaying(true);
@@ -91,13 +95,32 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
     }
   };
 
-  const toggleSound = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleVolumeChange = (newVal: number) => {
+    setVolume(newVal);
+    if (videoRef.current) {
+      videoRef.current.volume = newVal;
+      if (newVal === 0) {
+        videoRef.current.muted = true;
+        setIsMuted(true);
+      } else {
+        videoRef.current.muted = false;
+        setIsMuted(false);
+        if (videoRef.current.paused) {
+          videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+        }
+      }
+    }
+  };
+
+  const toggleSound = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
     if (videoRef.current) {
       const nextMuted = !isMuted;
       videoRef.current.muted = nextMuted;
       if (!nextMuted) {
-        videoRef.current.volume = 0.35;
+        const effectiveVol = volume === 0 ? 0.35 : volume;
+        setVolume(effectiveVol);
+        videoRef.current.volume = effectiveVol;
         videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
       }
       setIsMuted(nextMuted);
@@ -289,25 +312,111 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
                         )}
                       </button>
 
-                      {/* Floating Audio Control Button */}
-                      <button
-                        type="button"
-                        onClick={toggleSound}
-                        className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/80 hover:bg-black/95 border border-white/20 text-white backdrop-blur-md shadow-xl transition-all active:scale-95 cursor-pointer"
-                        title={isMuted ? 'Sesi Aç (35% Seviye)' : 'Sesi Kapat'}
+                      {/* Floating Audio Control & Volume Adjustment Slider */}
+                      <div 
+                        className="relative"
+                        onClick={(e) => e.stopPropagation()}
                       >
-                        {isMuted ? (
-                          <>
-                            <VolumeX size={13} className="text-rose-400" />
-                            <span className="text-[10px] font-mono font-semibold text-zinc-300">Ses Kapalı</span>
-                          </>
-                        ) : (
-                          <>
-                            <Volume2 size={13} className="text-emerald-400 animate-pulse" />
-                            <span className="text-[10px] font-mono font-semibold text-emerald-300">Ses %35</span>
-                          </>
-                        )}
-                      </button>
+                        {/* Volume Popover Panel */}
+                        <AnimatePresence>
+                          {showVolumePopup && (
+                            <motion.div
+                              initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                              animate={{ opacity: 1, y: 0, scale: 1 }}
+                              exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                              transition={{ duration: 0.15 }}
+                              className="absolute bottom-full right-0 mb-2 p-2.5 bg-zinc-950/95 border border-white/20 rounded-2xl shadow-[0_10px_35px_rgba(0,0,0,0.95)] backdrop-blur-xl z-40 w-44 flex flex-col gap-2 text-white"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <div className="flex items-center justify-between text-[11px] font-mono">
+                                <span className="text-zinc-400">Ses Seviyesi:</span>
+                                <span className="font-bold text-emerald-400">
+                                  %{isMuted ? '0' : Math.round(volume * 100)}
+                                </span>
+                              </div>
+
+                              {/* Interactive Range Slider */}
+                              <div className="flex items-center gap-2">
+                                <button
+                                  type="button"
+                                  onClick={toggleSound}
+                                  className="text-zinc-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors"
+                                  title={isMuted ? 'Sesi Aç' : 'Sesi Kapat'}
+                                >
+                                  {isMuted || volume === 0 ? (
+                                    <VolumeX size={13} className="text-rose-400" />
+                                  ) : volume < 0.5 ? (
+                                    <Volume1 size={13} className="text-emerald-400" />
+                                  ) : (
+                                    <Volume2 size={13} className="text-emerald-400" />
+                                  )}
+                                </button>
+                                
+                                <input
+                                  type="range"
+                                  min="0"
+                                  max="1"
+                                  step="0.05"
+                                  value={isMuted ? 0 : volume}
+                                  onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
+                                  className="w-full h-1.5 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-emerald-400"
+                                />
+                              </div>
+
+                              {/* Quick Level Presets */}
+                              <div className="flex items-center justify-between gap-1 pt-1 border-t border-white/10 text-[9px] font-mono">
+                                {[
+                                  { label: '%0', val: 0 },
+                                  { label: '%35', val: 0.35 },
+                                  { label: '%70', val: 0.7 },
+                                  { label: '%100', val: 1 }
+                                ].map((p) => (
+                                  <button
+                                    key={p.label}
+                                    type="button"
+                                    onClick={() => handleVolumeChange(p.val)}
+                                    className={`px-1.5 py-0.5 rounded transition-all cursor-pointer ${
+                                      (!isMuted && Math.abs(volume - p.val) < 0.05) || (isMuted && p.val === 0)
+                                        ? 'bg-emerald-500 text-zinc-950 font-bold'
+                                        : 'bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10'
+                                    }`}
+                                  >
+                                    {p.label}
+                                  </button>
+                                ))}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+
+                        {/* Main Trigger Button */}
+                        <div className="flex items-center rounded-full bg-black/80 hover:bg-black/95 border border-white/20 text-white backdrop-blur-md shadow-xl transition-all">
+                          <button
+                            type="button"
+                            onClick={toggleSound}
+                            className="p-1 pl-2 text-zinc-300 hover:text-white transition-colors cursor-pointer"
+                            title={isMuted ? 'Sesi Aç' : 'Sesi Kapat'}
+                          >
+                            {isMuted || volume === 0 ? (
+                              <VolumeX size={12} className="text-rose-400" />
+                            ) : volume < 0.5 ? (
+                              <Volume1 size={12} className="text-emerald-400" />
+                            ) : (
+                              <Volume2 size={12} className="text-emerald-400 animate-pulse" />
+                            )}
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => setShowVolumePopup(!showVolumePopup)}
+                            className="pr-2 py-1 text-[10px] font-mono font-semibold text-emerald-300 hover:text-white flex items-center gap-1 transition-colors cursor-pointer"
+                            title="Ses Seviyesini Ayarla"
+                          >
+                            <span>{isMuted || volume === 0 ? 'Kapalı' : `%${Math.round(volume * 100)}`}</span>
+                            <span className="text-[8px] text-zinc-400">⚙️</span>
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </motion.div>
                 </AnimatePresence>
