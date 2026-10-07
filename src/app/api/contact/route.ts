@@ -6,6 +6,16 @@ const resend = new Resend(resendApiKey);
 
 export async function POST(req: Request) {
   try {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      console.error('RESEND_API_KEY is not defined in environment variables.');
+      return NextResponse.json(
+        { error: 'Sunucu e-posta yapılandırması eksik (RESEND_API_KEY bulunamadı). Lütfen Vercel ayarlarından ekleyip Redeploy yapınız.' },
+        { status: 500 }
+      );
+    }
+
+    const resend = new Resend(apiKey);
     const body = await req.json();
     const { name, email, projectType, message, budget, platform } = body;
 
@@ -91,19 +101,20 @@ export async function POST(req: Request) {
     `;
 
     // Send via Resend
+    const recipientEmail = process.env.CONTACT_EMAIL || 'kmproduction00@gmail.com';
     const { data, error } = await resend.emails.send({
       from: 'KM Production Web <onboarding@resend.dev>',
-      to: ['kmproduction00@gmail.com'],
+      to: [recipientEmail],
       replyTo: email,
       subject: `🔥 Yeni Proje Talebi: ${name} (${projectType || 'Mobil Uygulama'})`,
       html: htmlContent,
     });
 
     if (error) {
-      console.error('Resend error:', error);
+      console.error('Resend API Error:', error);
       return NextResponse.json(
-        { error: 'E-posta gönderilirken bir hata oluştu. Lütfen doğrudan e-posta atınız.' },
-        { status: 500 }
+        { error: `Resend Hatası: ${error.message || 'E-posta gönderilemedi.'}` },
+        { status: 400 }
       );
     }
 
