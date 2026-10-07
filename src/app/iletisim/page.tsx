@@ -18,6 +18,8 @@ import { companyData } from '@/data/company';
 
 export default function ContactPage() {
   const [copied, setCopied] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -32,29 +34,52 @@ export default function ContactPage() {
     setTimeout(() => setCopied(false), 2500);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFormSubmitted(true);
+    setIsSubmitting(true);
+    setErrorMessage('');
     
     try {
-      confetti({
-        particleCount: 70,
-        spread: 60,
-        origin: { y: 0.6 }
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
       });
-    } catch {
-      // ignore
-    }
 
-    setTimeout(() => {
-      setFormSubmitted(false);
-      setFormData({
-        name: '',
-        email: '',
-        projectType: 'Yeni Mobil Uygulama (iOS & Android)',
-        message: ''
-      });
-    }, 6000);
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Mesaj gönderilemedi. Lütfen doğrudan e-posta atınız.');
+      }
+
+      setFormSubmitted(true);
+      
+      try {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      } catch {
+        // ignore
+      }
+
+      setTimeout(() => {
+        setFormSubmitted(false);
+        setFormData({
+          name: '',
+          email: '',
+          projectType: 'Yeni Mobil Uygulama (iOS & Android)',
+          message: ''
+        });
+      }, 7000);
+    } catch (err: any) {
+      setErrorMessage(err.message || 'E-posta gönderilirken bir hata oluştu. Lütfen doğrudan e-posta atınız.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -228,12 +253,28 @@ export default function ContactPage() {
                       />
                     </div>
 
+                    {errorMessage && (
+                      <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/20 text-xs text-red-400 font-medium leading-relaxed">
+                        ⚠️ {errorMessage}
+                      </div>
+                    )}
+
                     <button
                       type="submit"
-                      className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-white text-zinc-950 font-semibold text-xs sm:text-sm hover:bg-zinc-200 transition-all shadow-lg active:scale-98 cursor-pointer"
+                      disabled={isSubmitting}
+                      className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-white text-zinc-950 font-semibold text-xs sm:text-sm hover:bg-zinc-200 transition-all shadow-lg active:scale-98 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                     >
-                      <Send size={15} />
-                      <span>Teklif Talebini Gönder</span>
+                      {isSubmitting ? (
+                        <>
+                          <div className="w-4 h-4 rounded-full border-2 border-zinc-950 border-t-transparent animate-spin" />
+                          <span>E-posta Gönderiliyor...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Send size={15} />
+                          <span>Teklif Talebini Gönder</span>
+                        </>
+                      )}
                     </button>
 
                   </motion.form>
