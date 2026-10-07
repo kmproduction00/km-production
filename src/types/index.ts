@@ -14,8 +14,9 @@ export interface AppScreen {
   id: string;
   title: string;
   subtitle: string;
-  type?: 'dashboard' | 'analytics' | 'chat' | 'list' | 'settings' | 'game' | 'screenshot';
+  type?: 'dashboard' | 'analytics' | 'chat' | 'list' | 'settings' | 'game' | 'screenshot' | 'video';
   image?: string;
+  video?: string;
   gradient?: string;
 }
 

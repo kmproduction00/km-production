@@ -232,6 +232,13 @@ export const appsData: AppItem[] = [
     },
     screens: [
       {
+        id: 'screen-video',
+        title: 'Canlı Oynanış Videosu 🎬',
+        subtitle: 'Siberpunk synthwave müzikleri eşliğinde 60 FPS aksiyon dolu oynanış',
+        type: 'video',
+        video: '/videos/neon-runner-gameplay.mp4'
+      },
+      {
         id: 'screen-1',
         title: 'Ana Menü & Skor',
         subtitle: 'Siberpunk ana menü, Play, Shop, Maps ve rekor göstergesi',

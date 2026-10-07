@@ -1,6 +1,4 @@
-'use client';
-
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppItem } from '@/types';
 import { 
@@ -21,7 +19,9 @@ import {
   Zap,
   ChevronLeft,
   ChevronRight,
-  MousePointerClick
+  MousePointerClick,
+  Volume2,
+  VolumeX
 } from 'lucide-react';
 
 interface PhoneMockupProps {
@@ -39,10 +39,50 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
 }) => {
   const [activeScreenIndex, setActiveScreenIndex] = useState(0);
   const [slideDirection, setSlideDirection] = useState(1);
+  const [isMuted, setIsMuted] = useState(false);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const totalScreens = app.screens.length;
   const currentScreen = app.screens[activeScreenIndex] || app.screens[0];
   const isLandscape = app.orientation === 'landscape';
+
+  // Reset screen index when app changes
+  useEffect(() => {
+    setActiveScreenIndex(0);
+  }, [app.id]);
+
+  // Video Autoplay & Audio Volume Setup
+  useEffect(() => {
+    if (currentScreen?.video && videoRef.current) {
+      videoRef.current.volume = 0.35; // Ortanın biraz altında (35% rahatsız etmeyen ideal ses)
+      videoRef.current.muted = isMuted;
+      videoRef.current.currentTime = 0;
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // Tarayıcı ilk tıklamadan önce sesli oynatmayı kısıtlarsa sessiz başlat
+          if (videoRef.current) {
+            videoRef.current.muted = true;
+            setIsMuted(true);
+            videoRef.current.play().catch(() => {});
+          }
+        });
+      }
+    }
+  }, [activeScreenIndex, app.id, currentScreen?.video, isMuted]);
+
+  const toggleSound = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (videoRef.current) {
+      const nextMuted = !isMuted;
+      videoRef.current.muted = nextMuted;
+      if (!nextMuted) {
+        videoRef.current.volume = 0.35;
+        videoRef.current.play().catch(() => {});
+      }
+      setIsMuted(nextMuted);
+    }
+  };
 
   const handlePrev = (e?: React.MouseEvent) => {
     e?.stopPropagation();
@@ -164,7 +204,59 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
             {/* Screen Content Container with Drag / Swipe */}
             <div className={`relative flex-1 overflow-hidden flex flex-col justify-between text-white ${isLandscape ? 'pl-6 pr-3 py-2 sm:pl-8 sm:pr-4 sm:py-2.5' : 'p-2 sm:p-3'}`}>
               
-              {currentScreen?.image ? (
+              {currentScreen?.video ? (
+                /* Live Gameplay / Showcase Video with Autoplay and Sound Controls */
+                <AnimatePresence mode="popLayout" custom={slideDirection}>
+                  <motion.div
+                    key={`${app.id}-${currentScreen.id}`}
+                    custom={slideDirection}
+                    initial={{ x: slideDirection * 40 }}
+                    animate={{ x: 0 }}
+                    exit={{ x: -slideDirection * 40 }}
+                    transition={{ duration: 0.25, ease: 'easeOut' }}
+                    drag={interactive && totalScreens > 1 ? 'x' : false}
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.15}
+                    onDragEnd={(e, { offset, velocity }) => {
+                      if (offset.x < -30 || velocity.x < -250) {
+                        handleNext();
+                      } else if (offset.x > 30 || velocity.x > 250) {
+                        handlePrev();
+                      }
+                    }}
+                    className="absolute inset-0 w-full h-full z-10 cursor-grab active:cursor-grabbing flex items-center justify-center bg-black overflow-hidden"
+                  >
+                    <video
+                      ref={videoRef}
+                      src={currentScreen.video}
+                      autoPlay
+                      loop
+                      playsInline
+                      className="w-full h-full object-cover select-none pointer-events-none"
+                    />
+                    
+                    {/* Floating Audio Control Button */}
+                    <button
+                      type="button"
+                      onClick={toggleSound}
+                      className="absolute bottom-2.5 right-2.5 z-30 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/75 hover:bg-black/90 border border-white/20 text-white backdrop-blur-md shadow-xl transition-all active:scale-95 cursor-pointer group"
+                      title={isMuted ? 'Sesi Aç (35% Seviye)' : 'Sesi Kapat'}
+                    >
+                      {isMuted ? (
+                        <>
+                          <VolumeX size={13} className="text-rose-400" />
+                          <span className="text-[10px] font-mono font-semibold text-zinc-300">Ses Kapalı</span>
+                        </>
+                      ) : (
+                        <>
+                          <Volume2 size={13} className="text-emerald-400 animate-pulse" />
+                          <span className="text-[10px] font-mono font-semibold text-emerald-300">Ses %35</span>
+                        </>
+                      )}
+                    </button>
+                  </motion.div>
+                </AnimatePresence>
+              ) : currentScreen?.image ? (
                 /* Real In-App Screenshot with Drag Swipe & Bulletproof Visibility */
                 <AnimatePresence mode="popLayout" custom={slideDirection}>
                   <motion.div
