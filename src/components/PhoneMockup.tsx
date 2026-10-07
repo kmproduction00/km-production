@@ -16,6 +16,7 @@ import {
   Layers, 
   Trophy,
   Play,
+  Pause,
   Zap,
   ChevronLeft,
   ChevronRight,
@@ -40,6 +41,7 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
   const [activeScreenIndex, setActiveScreenIndex] = useState(0);
   const [slideDirection, setSlideDirection] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const totalScreens = app.screens.length;
@@ -49,6 +51,7 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
   // Reset screen index when app changes
   useEffect(() => {
     setActiveScreenIndex(0);
+    setIsPlaying(true);
   }, [app.id]);
 
   // Video Autoplay & Audio Volume Setup
@@ -57,6 +60,7 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
       videoRef.current.volume = 0.35; // Ortanın biraz altında (35% rahatsız etmeyen ideal ses)
       videoRef.current.muted = isMuted;
       videoRef.current.currentTime = 0;
+      setIsPlaying(true);
       const playPromise = videoRef.current.play();
       if (playPromise !== undefined) {
         playPromise.catch(() => {
@@ -64,12 +68,28 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
           if (videoRef.current) {
             videoRef.current.muted = true;
             setIsMuted(true);
-            videoRef.current.play().catch(() => {});
+            videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
           }
         });
       }
+    } else if (videoRef.current) {
+      videoRef.current.pause();
     }
-  }, [activeScreenIndex, app.id, currentScreen?.video, isMuted]);
+  }, [activeScreenIndex, app.id, currentScreen?.video]);
+
+  const togglePlay = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (videoRef.current) {
+      if (videoRef.current.paused) {
+        videoRef.current.play().then(() => {
+          setIsPlaying(true);
+        }).catch(() => {});
+      } else {
+        videoRef.current.pause();
+        setIsPlaying(false);
+      }
+    }
+  };
 
   const toggleSound = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -78,7 +98,7 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
       videoRef.current.muted = nextMuted;
       if (!nextMuted) {
         videoRef.current.volume = 0.35;
-        videoRef.current.play().catch(() => {});
+        videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
       }
       setIsMuted(nextMuted);
     }
@@ -205,7 +225,7 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
             <div className={`relative flex-1 overflow-hidden flex flex-col justify-between text-white ${isLandscape ? 'pl-6 pr-3 py-2 sm:pl-8 sm:pr-4 sm:py-2.5' : 'p-2 sm:p-3'}`}>
               
               {currentScreen?.video ? (
-                /* Live Gameplay / Showcase Video with Autoplay and Sound Controls */
+                /* Live Gameplay / Showcase Video with Autoplay, Play/Pause and Sound Controls */
                 <AnimatePresence mode="popLayout" custom={slideDirection}>
                   <motion.div
                     key={`${app.id}-${currentScreen.id}`}
@@ -224,7 +244,8 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
                         handlePrev();
                       }
                     }}
-                    className="absolute inset-0 w-full h-full z-10 cursor-grab active:cursor-grabbing flex items-center justify-center bg-black overflow-hidden"
+                    onClick={togglePlay}
+                    className="absolute inset-0 w-full h-full z-10 cursor-pointer flex items-center justify-center bg-black overflow-hidden group"
                   >
                     <video
                       ref={videoRef}
@@ -232,28 +253,62 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
                       autoPlay
                       loop
                       playsInline
+                      onPlay={() => setIsPlaying(true)}
+                      onPause={() => setIsPlaying(false)}
                       className="w-full h-full object-cover select-none pointer-events-none"
                     />
+
+                    {/* Big Center Play Indicator when paused */}
+                    {!isPlaying && (
+                      <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-[2px] pointer-events-none">
+                        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-black/70 border-2 border-white/60 flex items-center justify-center shadow-2xl backdrop-blur-md">
+                          <Play size={24} className="fill-white text-white translate-x-0.5" />
+                        </div>
+                      </div>
+                    )}
                     
-                    {/* Floating Audio Control Button */}
-                    <button
-                      type="button"
-                      onClick={toggleSound}
-                      className="absolute bottom-2.5 right-2.5 z-30 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/75 hover:bg-black/90 border border-white/20 text-white backdrop-blur-md shadow-xl transition-all active:scale-95 cursor-pointer group"
-                      title={isMuted ? 'Sesi Aç (35% Seviye)' : 'Sesi Kapat'}
-                    >
-                      {isMuted ? (
-                        <>
-                          <VolumeX size={13} className="text-rose-400" />
-                          <span className="text-[10px] font-mono font-semibold text-zinc-300">Ses Kapalı</span>
-                        </>
-                      ) : (
-                        <>
-                          <Volume2 size={13} className="text-emerald-400 animate-pulse" />
-                          <span className="text-[10px] font-mono font-semibold text-emerald-300">Ses %35</span>
-                        </>
-                      )}
-                    </button>
+                    {/* Bottom Controls Bar (Play/Pause & Sound) */}
+                    <div className="absolute bottom-2.5 inset-x-2.5 z-30 flex items-center justify-between pointer-events-auto">
+                      {/* Play / Pause Toggle Button */}
+                      <button
+                        type="button"
+                        onClick={togglePlay}
+                        className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/80 hover:bg-black/95 border border-white/20 text-white backdrop-blur-md shadow-xl transition-all active:scale-95 cursor-pointer"
+                        title={isPlaying ? 'Videoyu Durdur' : 'Videoyu Oynat'}
+                      >
+                        {isPlaying ? (
+                          <>
+                            <Pause size={11} className="text-amber-400 fill-amber-400" />
+                            <span className="text-[10px] font-mono font-semibold text-zinc-200">Durdur</span>
+                          </>
+                        ) : (
+                          <>
+                            <Play size={11} className="text-emerald-400 fill-emerald-400" />
+                            <span className="text-[10px] font-mono font-semibold text-emerald-300">Oynat</span>
+                          </>
+                        )}
+                      </button>
+
+                      {/* Floating Audio Control Button */}
+                      <button
+                        type="button"
+                        onClick={toggleSound}
+                        className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/80 hover:bg-black/95 border border-white/20 text-white backdrop-blur-md shadow-xl transition-all active:scale-95 cursor-pointer"
+                        title={isMuted ? 'Sesi Aç (35% Seviye)' : 'Sesi Kapat'}
+                      >
+                        {isMuted ? (
+                          <>
+                            <VolumeX size={13} className="text-rose-400" />
+                            <span className="text-[10px] font-mono font-semibold text-zinc-300">Ses Kapalı</span>
+                          </>
+                        ) : (
+                          <>
+                            <Volume2 size={13} className="text-emerald-400 animate-pulse" />
+                            <span className="text-[10px] font-mono font-semibold text-emerald-300">Ses %35</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
                   </motion.div>
                 </AnimatePresence>
               ) : currentScreen?.image ? (

@@ -148,6 +148,13 @@ export const appsData: AppItem[] = [
         image: '/screenshots/ezan-vakti-1.png'
       },
       {
+        id: 'screen-video',
+        title: 'Canlı Tanıtım Videosu 🎬',
+        subtitle: 'Uygulama arayüzü ve sesli özelliklerin canlı video önizlemesi',
+        type: 'video',
+        video: '/videos/ezan-vakti-preview.mp4'
+      },
+      {
         id: 'screen-2',
         title: 'Zikirmatik & Tesbih',
         subtitle: 'Sesli ve titreşimli dijital zikirmatik sayacı',
