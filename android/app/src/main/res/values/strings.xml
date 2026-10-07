@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">KM Production</string>
+    <string name="title_activity_main">KM Production</string>
+    <string name="package_name">com.kmproduction.app</string>
+    <string name="custom_url_scheme">com.kmproduction.app</string>
+</resources>

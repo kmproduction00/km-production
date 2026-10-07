@@ -29,9 +29,22 @@ export const Hero: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Top Studio Moniker */}
+        {/* Top Studio Moniker & Official Logo */}
         <div className="flex flex-col items-center text-center max-w-4xl mx-auto mb-8 sm:mb-12">
           
+          {/* Official Studio Logo */}
+          <div className="relative mb-5 group">
+            <div className="absolute -inset-2 bg-gradient-to-r from-blue-600/30 via-indigo-600/30 to-purple-600/30 rounded-3xl blur-xl opacity-50 group-hover:opacity-80 transition duration-500 pointer-events-none" />
+            <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-3xl p-1 bg-zinc-900/90 border border-white/20 shadow-2xl overflow-hidden backdrop-blur-xl group-hover:scale-105 transition-transform duration-300">
+              <img 
+                src="/logo.png" 
+                alt="KM Production" 
+                className="w-full h-full object-cover rounded-[20px]"
+                loading="eager"
+              />
+            </div>
+          </div>
+
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-900/90 border border-white/10 text-zinc-300 text-[10px] sm:text-xs font-mono mb-4 sm:mb-6 shadow-sm">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             <span>KM PRODUCTION • BAĞIMSIZ MOBİL ÜRÜN STÜDYOSU</span>
