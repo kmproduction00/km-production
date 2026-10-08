@@ -8,7 +8,7 @@ import { companyData } from '@/data/company';
 
 export const Footer: React.FC = () => {
   const pathname = usePathname();
-  if (pathname === '/deneme') return null;
+  if (pathname.startsWith('/indir') || pathname === '/deneme' || pathname === '/ezan-vakti' || pathname === '/diyarbakir-life') return null;
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });

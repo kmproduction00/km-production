@@ -20,7 +20,7 @@ export const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  if (pathname === '/deneme') return null;
+  if (pathname.startsWith('/indir') || pathname === '/deneme' || pathname === '/ezan-vakti' || pathname === '/diyarbakir-life') return null;
 
   const navLinks = [
     { name: 'Ana Sayfa', href: '/' },
