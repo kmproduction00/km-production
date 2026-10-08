@@ -19,6 +19,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://km-production-ruddy.vercel.app'),
   title: `${companyData.name} • ${companyData.brandTagline} | Mobil Uygulama Vitrini`,
   description: `${companyData.name} - iOS ve Android platformları için geliştirilmiş yüksek performanslı ve kullanıcı odaklı mobil uygulamalar.`,
   keywords: [
@@ -32,16 +33,32 @@ export const metadata: Metadata = {
     'Mobil Portföy'
   ],
   authors: [{ name: companyData.name }],
+  icons: {
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
+  },
   openGraph: {
     title: `${companyData.name} • Dijital Ürün & Mobil Uygulama Stüdyosu`,
     description: 'iOS ve Android için geliştirdiğimiz yeni nesil mobil uygulamaları keşfedin.',
+    url: 'https://km-production-ruddy.vercel.app',
+    siteName: companyData.name,
+    images: [
+      {
+        url: '/logo.png',
+        width: 800,
+        height: 800,
+        alt: 'KM Production Logo',
+      },
+    ],
     type: 'website',
     locale: 'tr_TR',
   },
   twitter: {
-    card: 'summary_large_image',
+    card: 'summary',
     title: `${companyData.name} • Mobile Studio`,
     description: 'Yeni nesil mobil ürün ve uygulama vitrini.',
+    images: ['/logo.png'],
   },
 };
 
