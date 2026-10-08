@@ -15,6 +15,7 @@ import {
   Layers
 } from 'lucide-react';
 import { Hero } from '@/components/Hero';
+import { DeviceShowcaseSection } from '@/components/DeviceShowcaseSection';
 import { StatsSection } from '@/components/StatsSection';
 import { appsData } from '@/data/apps';
 
@@ -65,8 +66,11 @@ export default function Home() {
   return (
     <div className="relative min-h-screen bg-[#030305] text-slate-100 flex flex-col justify-between">
       
-      {/* 1. HERO SECTION (With Live Interactive Device Preview) */}
+      {/* 1. HERO COVER SECTION (Full Viewport Height - Red Box) */}
       <Hero />
+
+      {/* 2. INTERACTIVE DEVICE SHOWCASE STAGE (Below the fold - Green Box) */}
+      <DeviceShowcaseSection />
 
       {/* 2. DEDICATED PORTAL NAVIGATION HUB (4 DIRECT BUTTON CARDS) */}
       <section className="relative py-12 sm:py-16 bg-studio-grid border-t border-white/[0.08]">
