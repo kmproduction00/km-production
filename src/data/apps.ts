@@ -4,14 +4,14 @@ export const appsData: AppItem[] = [
   {
     id: 'diyarbakir-life',
     title: 'Diyarbakır Life',
-    tagline: 'Şehir Rehberi, Tarihi Mekanlar, Haberler & Yerel Keşif',
-    description: "Diyarbakır'ın tarihi ve turistik yerlerini, zengin gastronomi duraklarını, güncel şehir haberlerini ve nöbetçi eczanelerini tek platformda sunan kapsamlı şehir yaşam rehberi.",
-    longDescription: "Diyarbakır Life; kadim şehir Diyarbakır'ı keşfetmek isteyen yerli ve yabancı ziyaretçiler ile şehir sakinleri için KM Production tarafından geliştirilmiş modern bir şehir rehberidir. Tarihi surlar, Hevsel Bahçeleri, On Gözlü Köprü gibi kültürel noktaları harita üzerinde detaylandırır; güncel etkinlikleri, lezzet duraklarını ve acil şehir bilgilerini anında kullanıcıya ulaştırır.",
+    tagline: 'Nöbetçi Eczaneler, İş İlanları, Seri İlanlar, Esnaf Rehberi & Canlı Finans Kurları',
+    description: "Diyarbakır merkez ve tüm ilçeleri için nöbetçi eczaneleri, iş ilanlarını, alım-satım seri ilanlarını, esnaf rehberini, canlı piyasa kurlarını ve güncel şehir haberlerini tek çatı altında sunan kapsamlı yerel yaşam platformu.",
+    longDescription: "Diyarbakır Life (Diyarbakır Yerel Yaşam); Diyarbakır genelinde ve Kayapınar, Sur, Yenişehir, Bağlar, Bismil, Ergani gibi tüm ilçelerde yaşayan vatandaşların günlük şehir hayatını kolaylaştırmak için KM Production tarafından Flutter ve bulut mimarisiyle geliştirilmiş hepsi bir arada yerel yaşam platformudur. Günlük nöbetçi eczanelerden filtreli iş ilanlarına, esnaf ve işletme dizininden alım-satım seri ilanlarına, canlı döviz/altın kurlarından halı saha oyuncu/rakip bulma sistemine ve Diyanet uyumlu namaz vakitlerine kadar şehrin tüm dinamiklerini tek bir akıllı arayüzde sunar.",
     icon: 'Compass',
     image: '/diyarbakir-life.png',
     coverImage: '/diyarbakir-life.png',
     category: 'Şehir & Yaşam',
-    badge: 'Şehir Rehberi',
+    badge: 'Şehir & Yerel Yaşam',
     platformText: 'iOS & Android',
     accentColor: {
       primary: 'from-amber-500 via-orange-600 to-red-700',
@@ -21,32 +21,53 @@ export const appsData: AppItem[] = [
       badgeText: 'text-orange-400',
     },
     highlights: [
-      'Tarihi & Turistik Rotalar',
-      'İnteraktif Şehir Haritası',
-      'Nöbetçi Eczaneler & Acil',
-      'Yerel Lezzet & Mekan Keşfi',
-      'Güncel Şehir Haberleri'
+      'İlçe Bazlı Canlı Şehir Paneli',
+      'Nöbetçi Eczaneler & Tek Tıkla Arama',
+      'Filtreli İş İlanları & Kariyer',
+      'Esnaf & İşletme Rehberi (Mekan Ekle)',
+      'Seri İlan Pazarı (Emlak, Vasıta, Eşya)',
+      'Canlı Piyasa Kurları (Döviz & Altın)'
     ],
     features: [
       {
-        title: 'Tarihi Mekanlar & Rotalar',
-        description: 'Ulu Cami, Diyarbakır Surları, Hasan Paşa Hanı gibi noktalar için detaylı bilgi ve navigasyon.',
-        icon: 'MapPin'
-      },
-      {
-        title: 'Nöbetçi Eczane & Acil Servisler',
-        description: 'Konumunuza en yakın açık nöbetçi eczaneleri ve yol tarifini anlık olarak bulma.',
+        title: 'Nöbetçi Eczaneler & Acil Sağlık',
+        description: 'Tüm ilçeler için günlük güncellenen nöbetçi eczane listesi, nöbet saatleri, konum navigasyonu ve tek dokunuşla arama.',
         icon: 'ShieldCheck'
       },
       {
-        title: 'Gastronomi & Lezzet Durakları',
-        description: 'Geleneksel lezzetleri bulabileceğiniz en popüler restoran ve mekan önerileri.',
-        icon: 'Sparkles'
+        title: 'İş İlanları & İstihdam',
+        description: 'Diyarbakır genelinde farklı sektörlerden güncel iş ve eleman ilanları, pozisyon filtreleri ve doğrudan işverene ulaşma.',
+        icon: 'Briefcase'
       },
       {
-        title: 'Haber & Etkinlik Akışı',
-        description: 'Şehirdeki konserler, kültürel etkinlikler ve güncel duyurular.',
+        title: 'Esnaf & İşletme Rehberi',
+        description: 'Şehirdeki dükkan, işletme ve hizmet noktalarının iletişim bilgileri, fotoğrafları, çalışma saatleri ve kullanıcı işletme kaydı.',
+        icon: 'Compass'
+      },
+      {
+        title: 'Seri İlanlar & Alım-Satım',
+        description: 'Emlak, vasıta, ikinci el ürün ve yerel hizmet kategorilerinde ücretsiz ilan verme ve ilan sahipleriyle mesajlaşma.',
         icon: 'Layers'
+      },
+      {
+        title: 'Canlı Finans, Döviz & Altın',
+        description: 'Dolar, Euro, Gram Altın, Çeyrek Altın ve Gümüş için anlık piyasa fiyatları ve detaylı görünüm.',
+        icon: 'TrendingUp'
+      },
+      {
+        title: 'Halı Saha & Spor Topluluğu',
+        description: 'Halı saha maçları için eksik oyuncu arama, rakip takım bulma ve şehirdeki spor tesisleri rehberi.',
+        icon: 'Gamepad2'
+      },
+      {
+        title: 'Hava Durumu & Ezan Vakitleri',
+        description: 'İlçeye özel anlık hava durumu, 5 günlük tahmin ve Diyanet ile tam uyumlu ezan saatleri ve vakit sayacı.',
+        icon: 'Sun'
+      },
+      {
+        title: 'Şehir Haberleri & Duyurular',
+        description: 'Diyarbakır ve bölgeye dair son dakika gelişmeleri, kültürel etkinlikler ve resmi şehir duyuruları.',
+        icon: 'Sparkles'
       }
     ],
     links: {
@@ -81,7 +102,7 @@ export const appsData: AppItem[] = [
     metrics: [
       { label: 'Kategori', value: 'Şehir & Yaşam' },
       { label: 'Platform', value: 'iOS & Android' },
-      { label: 'Konum', value: 'Diyarbakır' },
+      { label: 'Kapsam', value: 'Diyarbakır & İlçeleri' },
       { label: 'Mağaza Durumu', value: 'Yayında ✅' }
     ]
   },

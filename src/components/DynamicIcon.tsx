@@ -19,6 +19,10 @@ import {
   Server,
   Rocket,
   Layout,
+  Briefcase,
+  TrendingUp,
+  Sun,
+  Users,
   LucideIcon
 } from 'lucide-react';
 
@@ -39,7 +43,11 @@ const iconMap: Record<string, LucideIcon> = {
   Smartphone,
   Server,
   Rocket,
-  Layout
+  Layout,
+  Briefcase,
+  TrendingUp,
+  Sun,
+  Users
 };
 
 interface DynamicIconProps {
