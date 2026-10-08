@@ -168,7 +168,28 @@ export default function AppsPage() {
             {/* Left Column: Interactive Phone Device with Real In-App Screenshots */}
             <div className="lg:col-span-6 flex flex-col items-center justify-center order-1 lg:order-1">
               <PhoneMockup app={currentApp} size="md" />
-              <p className="text-[10px] sm:text-[11px] text-zinc-500 mt-2.5 font-mono text-center flex items-center gap-1">
+              
+              {/* Direct Download Badges Immediately Below Preview (Mobile First) */}
+              <div className="w-full mt-4 p-3.5 sm:p-4 rounded-2xl bg-zinc-900/95 border border-white/15 shadow-2xl flex flex-col gap-2.5 lg:hidden">
+                <div className="text-xs font-bold text-white flex items-center justify-between px-0.5">
+                  <span className="flex items-center gap-1.5 text-emerald-400">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    Hemen Ücretsiz İndirin:
+                  </span>
+                  <span className="text-[10px] text-zinc-400 font-mono">Resmi Mağazalar</span>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-stretch gap-2">
+                  {currentApp.links.appStore && (
+                    <AppStoreBadge url={currentApp.links.appStore} size="md" className="flex-1 justify-center py-3 text-xs" />
+                  )}
+                  {currentApp.links.playStore && (
+                    <GooglePlayBadge url={currentApp.links.playStore} size="md" className="flex-1 justify-center py-3 text-xs" />
+                  )}
+                </div>
+              </div>
+
+              <p className="text-[10px] sm:text-[11px] text-zinc-500 mt-2.5 font-mono text-center items-center gap-1 hidden lg:flex">
                 <Smartphone size={12} className="text-zinc-400" />
                 <span>Gerçek uygulama ekranı önizlemesi</span>
               </p>
@@ -237,8 +258,8 @@ export default function AppsPage() {
                 </div>
               </div>
 
-              {/* Big Tap-Friendly Download Badges (Perfect for Mobile Ad Traffic) */}
-              <div className="p-4 sm:p-5 rounded-2xl bg-zinc-900/90 border border-white/10 space-y-3">
+              {/* Big Tap-Friendly Download Badges (Desktop View) */}
+              <div className="hidden lg:block p-4 sm:p-5 rounded-2xl bg-zinc-900/90 border border-white/10 space-y-3">
                 <div className="text-xs font-bold text-white flex items-center justify-between">
                   <span>Hemen Ücretsiz İndirin:</span>
                   <span className="text-[10px] text-zinc-400 font-mono">Resmi Mağazalar</span>

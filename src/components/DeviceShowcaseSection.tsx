@@ -144,8 +144,28 @@ export const DeviceShowcaseSection: React.FC = () => {
             </div>
 
             {/* Right: Live Interactive Smartphone Mockup */}
-            <div className="lg:col-span-6 flex items-center justify-center order-1 lg:order-2">
+            <div className="lg:col-span-6 flex flex-col items-center justify-center order-1 lg:order-2">
               <PhoneMockup app={currentApp} size="md" />
+
+              {/* Direct Download Badges Immediately Below Preview (Mobile First) */}
+              <div className="w-full mt-4 p-3.5 sm:p-4 rounded-2xl bg-zinc-900/95 border border-white/15 shadow-2xl flex flex-col gap-2.5 lg:hidden">
+                <div className="text-xs font-bold text-white flex items-center justify-between px-0.5">
+                  <span className="flex items-center gap-1.5 text-emerald-400">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    Hemen Ücretsiz İndirin:
+                  </span>
+                  <span className="text-[10px] text-zinc-400 font-mono">Resmi Mağazalar</span>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-stretch gap-2">
+                  {currentApp.links.appStore && (
+                    <AppStoreBadge url={currentApp.links.appStore} size="md" className="flex-1 justify-center py-3 text-xs" />
+                  )}
+                  {currentApp.links.playStore && (
+                    <GooglePlayBadge url={currentApp.links.playStore} size="md" className="flex-1 justify-center py-3 text-xs" />
+                  )}
+                </div>
+              </div>
             </div>
 
           </div>
