@@ -20,6 +20,8 @@ export const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  if (pathname === '/deneme') return null;
+
   const navLinks = [
     { name: 'Ana Sayfa', href: '/' },
     { name: 'Uygulamalarımız', href: '/uygulamalar', highlight: true },

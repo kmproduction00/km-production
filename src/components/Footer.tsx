@@ -2,10 +2,14 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { ArrowUp } from 'lucide-react';
 import { companyData } from '@/data/company';
 
 export const Footer: React.FC = () => {
+  const pathname = usePathname();
+  if (pathname === '/deneme') return null;
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
