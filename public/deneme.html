@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Diyarbakır Life 21 - Uygulamayı İndir</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #061f1b, #0b4d43, #062c27);
+            color: white;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 430px;
+            text-align: center;
+            padding: 40px 25px;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 22px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            opacity: 0.75;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .button {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            margin: 12px 0;
+            border-radius: 14px;
+            text-decoration: none;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        .apple {
+            background: #111;
+        }
+
+        .android {
+            background: #16853b;
+        }
+
+        .info {
+            margin-top: 25px;
+            font-size: 13px;
+            opacity: 0.55;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <img src="/diyarbakir-life.png" class="logo" alt="Diyarbakır Life 21">
+
+    <h1>Diyarbakır Life 21</h1>
+
+    <p class="subtitle">
+        Diyarbakır'ın dijital yaşam uygulaması.<br>
+        Uygulamayı cihazınıza indirin.
+    </p>
+
+    <a id="downloadButton" class="button" href="#">
+        Uygulamayı İndir
+    </a>
+
+    <div id="manualButtons" style="display:none;">
+
+        <a
+            class="button apple"
+            href="https://apps.apple.com/tr/app/diyarbak%C4%B1r-life-21/id6804522256?l=tr">
+            🍎 App Store
+        </a>
+
+        <a
+            class="button android"
+            href="https://play.google.com/store/apps/details?id=com.diyarbakir.life">
+            🤖 Google Play
+        </a>
+
+    </div>
+
+    <p class="info">
+        Cihazınız otomatik olarak algılanacaktır.
+    </p>
+
+</div>
+
+<script>
+
+    const appleURL =
+        "https://apps.apple.com/tr/app/diyarbak%C4%B1r-life-21/id6804522256?l=tr";
+
+    const androidURL =
+        "https://play.google.com/store/apps/details?id=com.diyarbakir.life";
+
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    const button = document.getElementById("downloadButton");
+    const manualButtons = document.getElementById("manualButtons");
+
+    // iPhone / iPad / iPod
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+
+        button.href = appleURL;
+        button.className = "button apple";
+        button.textContent = "🍎 App Store'dan İndir";
+
+    }
+
+    // Android
+    else if (/android/i.test(userAgent)) {
+
+        button.href = androidURL;
+        button.className = "button android";
+        button.textContent = "🤖 Google Play'den İndir";
+
+    }
+
+    // Bilgisayar veya bilinmeyen cihaz
+    else {
+
+        button.style.display = "none";
+        manualButtons.style.display = "block";
+
+    }
+
+</script>
+
+</body>
+</html>
