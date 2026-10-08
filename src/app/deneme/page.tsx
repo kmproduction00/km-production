@@ -1,28 +1,30 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
 
 export default function DenemePage() {
   const appleURL = "https://apps.apple.com/tr/app/diyarbak%C4%B1r-life-21/id6804522256?l=tr";
   const androidURL = "https://play.google.com/store/apps/details?id=com.diyarbakir.life";
 
   const [deviceType, setDeviceType] = useState<'ios' | 'android' | 'desktop'>('desktop');
-  const [mounted, setMounted] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     const userAgent = navigator.userAgent || navigator.vendor || (window as unknown as { opera?: string }).opera || '';
 
     // iPhone / iPad / iPod
     if (/iPad|iPhone|iPod/.test(userAgent) && !(window as unknown as { MSStream?: boolean }).MSStream) {
       setDeviceType('ios');
+      setRedirecting(true);
+      window.location.replace(appleURL);
     }
     // Android
     else if (/android/i.test(userAgent)) {
       setDeviceType('android');
+      setRedirecting(true);
+      window.location.replace(androidURL);
     }
-    // Bilgisayar veya diğer cihazlar
+    // Bilgisayar / Diğer
     else {
       setDeviceType('desktop');
     }
@@ -76,60 +78,61 @@ export default function DenemePage() {
 
         <p style={{
           opacity: 0.75,
-          marginBottom: '30px',
+          marginBottom: '25px',
           lineHeight: '1.5',
           fontSize: '15px'
         }}>
-          Diyarbakır&apos;ın dijital yaşam uygulaması.<br />
-          Uygulamayı cihazınıza indirin.
+          {redirecting ? 'Mağazaya yönlendiriliyorsunuz...' : 'Diyarbakır\'ın dijital yaşam uygulaması.'}
         </p>
 
-        {/* Akıllı İndirme Butonları */}
-        {mounted && deviceType === 'ios' && (
-          <a
-            href={appleURL}
-            style={{
-              display: 'block',
-              width: '100%',
-              padding: '16px',
-              margin: '12px 0',
-              borderRadius: '14px',
-              textDecoration: 'none',
-              color: 'white',
-              fontSize: '17px',
-              fontWeight: 'bold',
-              background: '#111',
-              boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
-              transition: '0.2s'
-            }}
-          >
-            🍎 App Store&apos;dan İndir
-          </a>
+        {/* Yönlendirme Durumu & Butonlar */}
+        {deviceType === 'ios' && (
+          <div>
+            <a
+              href={appleURL}
+              style={{
+                display: 'block',
+                width: '100%',
+                padding: '16px',
+                margin: '12px 0',
+                borderRadius: '14px',
+                textDecoration: 'none',
+                color: 'white',
+                fontSize: '17px',
+                fontWeight: 'bold',
+                background: '#111',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.3)'
+              }}
+            >
+              🍎 App Store&apos;a Git
+            </a>
+          </div>
         )}
 
-        {mounted && deviceType === 'android' && (
-          <a
-            href={androidURL}
-            style={{
-              display: 'block',
-              width: '100%',
-              padding: '16px',
-              margin: '12px 0',
-              borderRadius: '14px',
-              textDecoration: 'none',
-              color: 'white',
-              fontSize: '17px',
-              fontWeight: 'bold',
-              background: '#16853b',
-              boxShadow: '0 4px 15px rgba(22,133,59,0.4)',
-              transition: '0.2s'
-            }}
-          >
-            🤖 Google Play&apos;den İndir
-          </a>
+        {deviceType === 'android' && (
+          <div>
+            <a
+              href={androidURL}
+              style={{
+                display: 'block',
+                width: '100%',
+                padding: '16px',
+                margin: '12px 0',
+                borderRadius: '14px',
+                textDecoration: 'none',
+                color: 'white',
+                fontSize: '17px',
+                fontWeight: 'bold',
+                background: '#16853b',
+                boxShadow: '0 4px 15px rgba(22,133,59,0.4)'
+              }}
+            >
+              🤖 Google Play&apos;e Git
+            </a>
+          </div>
         )}
 
-        {(!mounted || deviceType === 'desktop') && (
+        {deviceType === 'desktop' && (
           <div>
             <a
               href={appleURL}
@@ -178,7 +181,7 @@ export default function DenemePage() {
           fontSize: '13px',
           opacity: 0.55
         }}>
-          Cihazınız otomatik olarak algılanacaktır.
+          {redirecting ? 'Yönlendirme başlamadıysa yukarıdaki butona tıklayabilirsiniz.' : 'Cihazınız otomatik olarak algılanır.'}
         </p>
       </div>
     </div>

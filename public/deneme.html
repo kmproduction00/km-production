@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Diyarbakır Life 21 - Uygulamayı İndir</title>
+    <title>Diyarbakır Life 21 - Yönlendiriliyorsunuz...</title>
 
     <style>
         * {
@@ -52,7 +52,7 @@
 
         .subtitle {
             opacity: 0.75;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             line-height: 1.5;
         }
 
@@ -98,13 +98,12 @@
 
     <h1>Diyarbakır Life 21</h1>
 
-    <p class="subtitle">
-        Diyarbakır'ın dijital yaşam uygulaması.<br>
-        Uygulamayı cihazınıza indirin.
+    <p id="statusText" class="subtitle">
+        Mağazaya yönlendiriliyorsunuz...
     </p>
 
-    <a id="downloadButton" class="button" href="#">
-        Uygulamayı İndir
+    <a id="downloadButton" class="button" href="#" style="display:none;">
+        Mağazaya Git
     </a>
 
     <div id="manualButtons" style="display:none;">
@@ -124,13 +123,12 @@
     </div>
 
     <p class="info">
-        Cihazınız otomatik olarak algılanacaktır.
+        Yönlendirme başlamazsa butona tıklayabilirsiniz.
     </p>
 
 </div>
 
 <script>
-
     const appleURL =
         "https://apps.apple.com/tr/app/diyarbak%C4%B1r-life-21/id6804522256?l=tr";
 
@@ -141,33 +139,29 @@
 
     const button = document.getElementById("downloadButton");
     const manualButtons = document.getElementById("manualButtons");
+    const statusText = document.getElementById("statusText");
 
     // iPhone / iPad / iPod
     if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-
         button.href = appleURL;
         button.className = "button apple";
-        button.textContent = "🍎 App Store'dan İndir";
-
+        button.textContent = "🍎 App Store'a Git";
+        button.style.display = "block";
+        window.location.replace(appleURL);
     }
-
     // Android
     else if (/android/i.test(userAgent)) {
-
         button.href = androidURL;
         button.className = "button android";
-        button.textContent = "🤖 Google Play'den İndir";
-
+        button.textContent = "🤖 Google Play'e Git";
+        button.style.display = "block";
+        window.location.replace(androidURL);
     }
-
-    // Bilgisayar veya bilinmeyen cihaz
+    // Bilgisayar / Desktop
     else {
-
-        button.style.display = "none";
+        statusText.textContent = "Diyarbakır'ın dijital yaşam uygulaması.";
         manualButtons.style.display = "block";
-
     }
-
 </script>
 
 </body>
